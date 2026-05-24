@@ -1,0 +1,134 @@
+[
+  {
+    "hanzi": "你好",
+    "pinyin": "nǐ hǎo",
+    "translation": "hello",
+    "example_sentence": "你好！",
+    "hsk_level": 1,
+    "tags": [
+      "greeting"
+    ],
+    "difficulty": 1
+  },
+  {
+    "hanzi": "谢谢",
+    "pinyin": "xiè xie",
+    "translation": "thank you",
+    "example_sentence": "谢谢你。",
+    "hsk_level": 1,
+    "tags": [
+      "polite"
+    ],
+    "difficulty": 1
+  },
+  {
+    "hanzi": "再见",
+    "pinyin": "zài jiàn",
+    "translation": "goodbye",
+    "example_sentence": "明天再见。",
+    "hsk_level": 1,
+    "tags": [
+      "greeting"
+    ],
+    "difficulty": 1
+  },
+  {
+    "hanzi": "学习",
+    "pinyin": "xué xí",
+    "translation": "to study",
+    "example_sentence": "我每天学习中文。",
+    "hsk_level": 1,
+    "tags": [
+      "verb"
+    ],
+    "difficulty": 2
+  },
+  {
+    "hanzi": "朋友",
+    "pinyin": "péng yǒu",
+    "translation": "friend",
+    "example_sentence": "他是我的朋友。",
+    "hsk_level": 1,
+    "tags": [
+      "noun"
+    ],
+    "difficulty": 2
+  },
+  {
+    "hanzi": "中国",
+    "pinyin": "Zhōng guó",
+    "translation": "China",
+    "example_sentence": "我喜欢中国。",
+    "hsk_level": 1,
+    "tags": [
+      "country"
+    ],
+    "difficulty": 1
+  },
+  {
+    "hanzi": "老师",
+    "pinyin": "lǎo shī",
+    "translation": "teacher",
+    "example_sentence": "老师很好。",
+    "hsk_level": 2,
+    "tags": [
+      "person"
+    ],
+    "difficulty": 2
+  },
+  {
+    "hanzi": "学生",
+    "pinyin": "xué sheng",
+    "translation": "student",
+    "example_sentence": "我是学生。",
+    "hsk_level": 1,
+    "tags": [
+      "person"
+    ],
+    "difficulty": 1
+  },
+  {
+    "hanzi": "今天",
+    "pinyin": "jīn tiān",
+    "translation": "today",
+    "example_sentence": "今天天气很好。",
+    "hsk_level": 1,
+    "tags": [
+      "time"
+    ],
+    "difficulty": 1
+  },
+  {
+    "hanzi": "明天",
+    "pinyin": "míng tiān",
+    "translation": "tomorrow",
+    "example_sentence": "明天见。",
+    "hsk_level": 1,
+    "tags": [
+      "time"
+    ],
+    "difficulty": 1
+  },
+  {
+    "hanzi": "吃饭",
+    "pinyin": "chī fàn",
+    "translation": "to eat",
+    "example_sentence": "我们去吃饭。",
+    "hsk_level": 2,
+    "tags": [
+      "verb"
+    ],
+    "difficulty": 2
+  },
+  {
+    "hanzi": "喜欢",
+    "pinyin": "xǐ huān",
+    "translation": "to like",
+    "example_sentence": "我喜欢音乐。",
+    "hsk_level": 1,
+    "tags": [
+      "verb"
+    ],
+    "difficulty": 1
+  }
+]
