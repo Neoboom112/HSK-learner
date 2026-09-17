@@ -61,7 +61,7 @@ def _decompress_zstd(payload: bytes) -> bytes:
             return reader.read()
         finally:
             reader.close()
-    except Exception as exc:  # noqa: BLE001 - zstandard raises its own error type
+    except Exception as exc:  # zstandard raises its own error type
         raise ValueError(f"Could not unpack the compressed collection: {exc}") from exc
 
 

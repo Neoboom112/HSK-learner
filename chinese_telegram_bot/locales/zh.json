@@ -90,7 +90,7 @@
   "back": "‹ 返回",
   "retry": "🔁 再试一次",
   "menu_help": "帮助",
-  "help_text": "<b>我能做什么</b>\n\n📚 选择词典 — 内置 HSK 1 词表或自己的文件（CSV、JSON、TXT、Anki .apkg）\n🎓 开始学习 — 闪卡、打字、选择题、听力\n📈 学习进度 — 统计、图表和导出\n\n<b>命令</b>\n/start — 菜单\n/dictionary — 选择词典\n/progress — 学习进度\n/help — 帮助",
+  "help_text": "<b>我能做什么</b>\n\n📚 选择词典 — 内置 HSK 1 词表或自己的文件（CSV、JSON、TXT、Anki .apkg）\n🎓 开始学习 — 闪卡、打字、HSK 测验、随机复习、每日复习\n📈 学习进度 — 统计、图表和导出\n\n<b>命令</b>\n/start — 菜单\n/dictionary — 选择词典\n/progress — 学习进度\n/help — 帮助",
   "dict_retry": "请再次发送文件，或使用下方按钮。",
   "progress_reset": "🗑 重置进度",
   "progress_reset_ask": "要重置进度吗？复习计划、答题记录和统计将被清除。词典和卡片会保留。",

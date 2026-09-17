@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 def progress_bar(value: float, total: float, width: int = 12) -> str:
     if total <= 0:
         return "▱" * width
-    filled = max(0, min(width, int(round(width * value / total))))
+    filled = max(0, min(width, round(width * value / total)))
     return "▰" * filled + "▱" * (width - filled)
 
 

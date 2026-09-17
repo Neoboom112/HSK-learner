@@ -90,7 +90,7 @@
   "back": "‹ Back",
   "retry": "🔁 Try again",
   "menu_help": "Help",
-  "help_text": "<b>What I can do</b>\n\n📚 Select Dictionary — the built-in HSK 1 deck or your own file (CSV, JSON, TXT, Anki .apkg)\n🎓 Start Learning — flashcards, typing, multiple choice, listening\n📈 Your Progress — statistics, chart and export\n\n<b>Commands</b>\n/start — menu\n/dictionary — choose a dictionary\n/progress — progress\n/help — this help",
+  "help_text": "<b>What I can do</b>\n\n📚 Select Dictionary — the built-in HSK 1 deck or your own file (CSV, JSON, TXT, Anki .apkg)\n🎓 Start Learning — flashcards, typing, HSK quiz, random and daily review\n📈 Your Progress — statistics, chart and export\n\n<b>Commands</b>\n/start — menu\n/dictionary — choose a dictionary\n/progress — progress\n/help — this help",
   "dict_retry": "Send the file again, or use the buttons below.",
   "progress_reset": "🗑 Reset progress",
   "progress_reset_ask": "Reset your progress? The review schedule, answer history and statistics will be cleared. Dictionaries and cards stay.",

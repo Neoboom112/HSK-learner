@@ -112,7 +112,7 @@ class DictionaryImportService:
         difficulty_raw = row.get("difficulty") or row.get("score") or 1
         try:
             difficulty = int(difficulty_raw)
-        except Exception:
+        except (TypeError, ValueError):
             difficulty = 1
         metadata = {
             k: v for k, v in row.items()

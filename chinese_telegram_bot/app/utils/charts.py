@@ -12,8 +12,8 @@ import matplotlib
 # The bot has no GUI: render straight to files.
 matplotlib.use("Agg")
 
-import matplotlib.pyplot as plt  # noqa: E402
-from matplotlib import font_manager  # noqa: E402
+import matplotlib.pyplot as plt
+from matplotlib import font_manager
 
 # DejaVu covers Latin and Cyrillic, the CJK fonts cover Chinese.  matplotlib picks
 # a font per glyph, so listing them all keeps every label readable.

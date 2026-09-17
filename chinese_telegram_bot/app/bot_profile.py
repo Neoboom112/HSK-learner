@@ -29,7 +29,7 @@ DESCRIPTIONS: dict[str, str] = {
         "Learn Chinese words with spaced repetition.\n\n"
         "• HSK 1 deck is preinstalled, and you can import your own dictionaries "
         "(CSV, JSON, TXT, Anki .apkg)\n"
-        "• Modes: flashcards, typing, multiple choice, listening\n"
+        "• Modes: flashcards, typing, HSK quiz, random and daily review\n"
         "• Reviews are scheduled with SM-2, progress comes with a chart\n"
         "• Export to JSON, CSV or Anki APKG\n\n"
         "Press /start to begin."
@@ -38,7 +38,7 @@ DESCRIPTIONS: dict[str, str] = {
         "Учим китайские слова с интервальными повторениями.\n\n"
         "• Колода HSK 1 уже внутри, свои словари можно импортировать "
         "(CSV, JSON, TXT, Anki .apkg)\n"
-        "• Режимы: карточки, ввод текста, тест, аудирование\n"
+        "• Режимы: карточки, ввод текста, HSK-квиз, случайный и дневной повтор\n"
         "• Повторения планируются по SM-2, прогресс — с графиком\n"
         "• Экспорт в JSON, CSV и Anki APKG\n\n"
         "Нажмите /start, чтобы начать."
@@ -46,7 +46,7 @@ DESCRIPTIONS: dict[str, str] = {
     "zh": (
         "用间隔复习学习中文词汇。\n\n"
         "• 已内置 HSK 1 词表，也可以导入自己的词典（CSV、JSON、TXT、Anki .apkg）\n"
-        "• 模式：闪卡、打字、选择题、听力\n"
+        "• 模式：闪卡、打字、HSK 测验、随机复习、每日复习\n"
         "• 按 SM-2 安排复习，进度带图表\n"
         "• 支持导出 JSON、CSV 和 Anki APKG\n\n"
         "发送 /start 开始使用。"
@@ -108,14 +108,14 @@ async def apply_bot_profile(bot: Bot, settings: Settings) -> None:
                 language_code=locale,
             )
             await bot.set_my_commands(_commands(locale), language_code=locale)
-        except Exception:  # noqa: BLE001 - the bot must start even if this fails
+        except Exception:  # the bot must start even if the profile cannot be set
             logger.exception("Could not apply the bot profile for locale %s", locale)
 
     try:
         await bot.set_my_short_description(short_description=SHORT_DESCRIPTIONS[FALLBACK_LOCALE])
         await bot.set_my_description(description=DESCRIPTIONS[FALLBACK_LOCALE])
         await bot.set_my_commands(_commands(FALLBACK_LOCALE), scope=BotCommandScopeDefault())
-    except Exception:  # noqa: BLE001
+    except Exception:
         logger.exception("Could not apply the default bot profile")
 
     # Administrators additionally see /admin in their private chat.
@@ -127,5 +127,5 @@ async def apply_bot_profile(bot: Bot, settings: Settings) -> None:
                     scope=BotCommandScopeChat(chat_id=admin_id),
                     language_code=locale,
                 )
-            except Exception:  # noqa: BLE001
+            except Exception:
                 logger.exception("Could not apply admin commands for %s", admin_id)

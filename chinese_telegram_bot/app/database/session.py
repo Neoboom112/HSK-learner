@@ -60,7 +60,7 @@ async def init_models() -> None:
                 # database").  The mode is stored in the database itself.
                 mode = (await connection.exec_driver_sql("PRAGMA journal_mode=WAL")).scalar()
                 logger.info("SQLite journal mode: %s", mode)
-            except Exception:  # noqa: BLE001 - startup must not fail on this
+            except Exception:  # startup must not fail on this
                 logger.warning("Could not switch the database to WAL mode", exc_info=True)
             await connection.exec_driver_sql("PRAGMA busy_timeout=30000")
 

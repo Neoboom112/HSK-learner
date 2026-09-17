@@ -44,7 +44,7 @@ _pending: ContextVar[_Pending | None] = ContextVar("outbox", default=None)
 class OutboxMiddleware:
     """aiogram request middleware: hold replies until the outbox is flushed."""
 
-    async def __call__(self, make_request, bot, method, timeout=None):  # noqa: ANN001
+    async def __call__(self, make_request, bot, method, timeout=None):
         pending = _pending.get()
         if pending is None or not isinstance(method, BUFFERED_METHODS):
             return await make_request(bot, method, timeout=timeout)
@@ -69,5 +69,5 @@ async def flush_outbox(entries: _Pending) -> None:
     for make_request, bot, method, timeout in entries:
         try:
             await make_request(bot, method, timeout=timeout)
-        except Exception:  # noqa: BLE001 - a failed reply must not kill the bot
+        except Exception:  # a failed reply must not kill the bot
             logger.exception("Could not deliver %s after commit", type(method).__name__)
