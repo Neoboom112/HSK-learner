@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+data/bot.db
+data/bot.db-journal
+data/bot.db-wal
+data/bot.db-shm
+data/exports/
+backups/
+logs/
+*.anki2.tmp

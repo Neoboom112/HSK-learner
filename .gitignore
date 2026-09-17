@@ -1,0 +1,20 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+venv/
+
+# Secrets
+.env
+
+# Runtime data of the bot
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+data/exports/
+logs/
+backups/
+*.anki2.tmp

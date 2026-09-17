@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 
-from sqlalchemy import func, select
+from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.models import Review
@@ -64,3 +64,9 @@ class ReviewRepository:
         )
         data = [(str(day), int(count)) for day, count in rows.all()]
         return list(reversed(data))
+
+    async def delete_for_user(self, user_id: int) -> int:
+        """Drop the answer history of a user, returning how many rows went away."""
+        result = await self.session.execute(delete(Review).where(Review.user_id == user_id))
+        await self.session.flush()
+        return int(result.rowcount or 0)

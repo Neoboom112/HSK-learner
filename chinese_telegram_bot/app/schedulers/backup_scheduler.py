@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import logging
 from pathlib import Path
 
@@ -24,7 +25,14 @@ class BackupScheduler:
         logger.info("Backup scheduler started")
 
     async def stop(self) -> None:
+        if not self.scheduler.running:
+            return
         self.scheduler.shutdown(wait=False)
+        # AsyncIOScheduler finishes shutting down on the next loop iteration.
+        for _ in range(20):
+            if not self.scheduler.running:
+                break
+            await asyncio.sleep(0.05)
         logger.info("Backup scheduler stopped")
 
     async def _tick(self) -> None:

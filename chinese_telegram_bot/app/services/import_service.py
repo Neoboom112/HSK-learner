@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import io
 import json
+import re
 import tempfile
 from pathlib import Path
 
@@ -13,20 +14,29 @@ from app.utils.validators import infer_hsk_level, parse_tags
 
 class DictionaryImportService:
     def parse_bytes(self, filename: str, content: bytes) -> list[CardDraft]:
+        cards, _deck_name = self.parse_bytes_detailed(filename, content)
+        return cards
+
+    def parse_bytes_detailed(self, filename: str, content: bytes) -> tuple[list[CardDraft], str | None]:
+        """Parse an uploaded file into ``(cards, deck name)``.
+
+        The deck name is only known for Anki packages, where the name inside the
+        file beats the uploaded file name ("HSK1 (3).apkg") as a dictionary name.
+        """
         ext = Path(filename).suffix.lower()
         if ext == ".csv":
-            return self._parse_csv(content)
+            return self._parse_csv(content), None
         if ext == ".json":
-            return self._parse_json(content)
+            return self._parse_json(content), None
         if ext == ".txt":
-            return self._parse_txt(content)
+            return self._parse_txt(content), None
         if ext == ".apkg":
             with tempfile.NamedTemporaryFile(delete=False, suffix=".apkg") as tmp:
                 tmp_path = Path(tmp.name)
                 tmp.write(content)
             try:
-                _, cards = parse_apkg(tmp_path)
-                return cards
+                deck_name, cards = parse_apkg(tmp_path)
+                return cards, deck_name
             finally:
                 tmp_path.unlink(missing_ok=True)
         raise ValueError(f"Unsupported file format: {ext}")
@@ -55,7 +65,7 @@ class DictionaryImportService:
             line = line.strip()
             if not line or line.startswith("#"):
                 continue
-            parts = [part.strip() for part in line.replace("\t", "|").split("|")]
+            parts = self._split_txt_line(line)
             while len(parts) < 7:
                 parts.append("")
             row = {
@@ -69,6 +79,25 @@ class DictionaryImportService:
             }
             items.append(self._row_to_card(row))
         return items
+
+    @staticmethod
+    def _split_txt_line(line: str) -> list[str]:
+        """Split a text line into fields.
+
+        Accepts the layouts people actually use::
+
+            颜色 | yánsè | цвет
+            颜色 ; yánsè ; цвет
+            颜色 \t yánsè \t цвет
+            颜色    yánsè    цвет
+        """
+        for separator in ("|", ";", "\t", "；", "｜"):
+            if separator in line:
+                return [part.strip() for part in line.split(separator)]
+        # Two or more spaces separate columns but single spaces (pinyin) survive.
+        if re.search(r"\s{2,}", line):
+            return [part.strip() for part in re.split(r"\s{2,}", line)]
+        return [line.strip()]
 
     def _row_to_card(self, row: dict) -> CardDraft:
         hanzi = str(row.get("hanzi") or row.get("front") or row.get("word") or row.get("词") or "").strip()

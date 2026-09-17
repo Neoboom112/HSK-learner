@@ -1,0 +1,11 @@
+aiogram>=3.13,<4.0
+aiosqlite>=0.20
+alembic>=1.13
+APScheduler>=3.10,<4.0
+genanki>=0.13
+matplotlib>=3.8
+pydantic>=2.9,<3.0
+pydantic-settings>=2.5
+python-dotenv>=1.0
+SQLAlchemy[asyncio]>=2.0.36,<2.1
+zstandard>=0.22

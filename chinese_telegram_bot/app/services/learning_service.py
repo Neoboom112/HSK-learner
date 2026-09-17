@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Iterable
 from datetime import datetime, timezone
 from random import choice
 
@@ -25,18 +26,44 @@ class LearningService:
         session = await self.sessions.start(user_id=user_id, mode=mode.value)
         return session.id
 
-    async def next_card(self, user_id: int, mode: LearningMode) -> Card | None:
+    async def next_card(
+        self,
+        user_id: int,
+        mode: LearningMode,
+        exclude: Iterable[int] | None = None,
+        dictionary_id: int | None = None,
+    ) -> Card | None:
+        """Pick the next card.
+
+        ``exclude`` drops ids already skipped in this session, ``dictionary_id``
+        limits the choice to one deck (``None`` means every deck of the user).
+        """
+        excluded = {int(card_id) for card_id in (exclude or ())}
+
+        def usable(cards: list[Card]) -> list[Card]:
+            return [card for card in cards if card.id not in excluded]
+
         if mode in {LearningMode.DAILY_REVIEW, LearningMode.RANDOM_REVIEW}:
-            due_cards = await self.cards.get_due_cards(user_id, limit=1 if mode == LearningMode.DAILY_REVIEW else 20)
+            limit = 1 if mode == LearningMode.DAILY_REVIEW else 20
+            due_cards = usable(
+                await self.cards.get_due_cards(user_id, limit=limit, dictionary_id=dictionary_id)
+            )
             if due_cards:
                 return due_cards[0] if mode == LearningMode.DAILY_REVIEW else choice(due_cards)
-        due = await self.cards.get_due_cards(user_id, limit=20)
+
+        due = usable(await self.cards.get_due_cards(user_id, limit=20, dictionary_id=dictionary_id))
         if due:
             return choice(due)
-        return choice(await self.cards.get_random_cards(user_id, limit=20)) if await self.cards.get_random_cards(user_id, limit=1) else None
+
+        rest = usable(
+            await self.cards.get_random_cards(user_id, limit=20, dictionary_id=dictionary_id)
+        )
+        return choice(rest) if rest else None
 
     async def answer(self, user_id: int, card_id: int, grade: int, mode: LearningMode, response_time_ms: int | None = None) -> tuple[Card, bool]:
-        card = await self.cards.get_by_id(card_id)
+        # Only cards of this user may be graded: a crafted callback must not be
+        # able to touch (or reveal) somebody else's card.
+        card = await self.cards.get_by_id(card_id, user_id)
         if card is None:
             raise ValueError("Card not found")
         update = self.srs.review(card, grade)

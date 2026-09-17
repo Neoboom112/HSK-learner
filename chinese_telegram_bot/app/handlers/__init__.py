@@ -10,12 +10,20 @@ from app.handlers.start import router as start_router
 
 
 def get_routers():
+    """Routers in evaluation order.
+
+    The menu router answers every plain text message, so it has to come after
+    the stateful routers (:mod:`app.handlers.dictionary` waits for an uploaded
+    file, :mod:`app.handlers.learning` waits for a typed answer) and after the
+    command router of :mod:`app.handlers.admin`.  Otherwise the first matching
+    handler wins and those flows never see the message.
+    """
     return [
         start_router,
-        menu_router,
         dictionary_router,
         learning_router,
-        progress_router,
         admin_router,
+        menu_router,
+        progress_router,
         errors_router,
     ]

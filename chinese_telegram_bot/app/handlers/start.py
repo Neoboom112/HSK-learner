@@ -16,6 +16,7 @@ router = Router(name=__name__)
 
 @router.message(CommandStart())
 async def start(message: Message, session, locale: str, t, state: FSMContext) -> None:
+    await state.clear()
     user = await UserRepository(session).get_by_telegram_id(message.from_user.id)
     if user is None or not user.language:
         await state.set_state(LanguageState.choosing)

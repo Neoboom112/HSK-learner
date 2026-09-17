@@ -1,10 +1,91 @@
 from __future__ import annotations
 
+import re
+import unicodedata
+
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import Message
 
 from app.database.models import Card, User
 from app.repositories.users import UserRepository
 from app.utils.text import compact_dt
+
+_ANSWER_SPLIT_RE = re.compile(r"[;,/、]|(?:\s+-\s+)")
+_NOISE_RE = re.compile(r"[^\w\s]", flags=re.UNICODE)
+_ARTICLES = ("to ", "a ", "an ", "the ")
+
+
+def _normalize_answer(value: str) -> str:
+    """Lower case, drop punctuation and squeeze spaces."""
+    text = value.casefold().replace("ё", "е")
+    text = _NOISE_RE.sub(" ", text)
+    return " ".join(text.split())
+
+
+def _without_diacritics(value: str) -> str:
+    decomposed = unicodedata.normalize("NFKD", value)
+    return "".join(char for char in decomposed if not unicodedata.combining(char))
+
+
+def _answer_variants(card: Card) -> set[str]:
+    variants: set[str] = set()
+    for value in (card.hanzi, card.translation, card.pinyin):
+        if not value:
+            continue
+        variants.add(_normalize_answer(value))
+        for part in _ANSWER_SPLIT_RE.split(value):
+            variants.add(_normalize_answer(part))
+    if card.pinyin:
+        plain = _normalize_answer(_without_diacritics(card.pinyin))
+        variants.add(plain)
+        variants.add(plain.replace(" ", ""))
+    for value in list(variants):
+        for article in _ARTICLES:
+            if value.startswith(article):
+                variants.add(value[len(article):])
+    variants.discard("")
+    return variants
+
+
+def answer_accepted(text: str, card: Card) -> bool:
+    """Check a typed answer against everything the card knows about itself.
+
+    Translations often hold several variants ("все, весь, всё"), pinyin may be
+    typed without tone marks and some decks store translations in another
+    language, so the comparison is deliberately forgiving.
+    """
+    answer = _normalize_answer(text or "")
+    if not answer:
+        return False
+
+    variants = _answer_variants(card)
+    if answer in variants:
+        return True
+
+    compact = answer.replace(" ", "")
+    for variant in variants:
+        if len(variant) >= 2 and (variant in answer or answer in variant):
+            return True
+        squashed = variant.replace(" ", "")
+        if len(squashed) >= 2 and (squashed in compact or compact in squashed):
+            return True
+    return False
+
+
+async def edit_or_send(message: Message, text: str, **kwargs) -> None:
+    """Edit the message in place, or send a new one when it cannot be edited.
+
+    Buttons of the bot sit on text messages, but a photo (the progress chart)
+    cannot be turned into text, and Telegram also rejects edits that change
+    nothing - in both cases a fresh message is the right answer.
+    """
+    if message.text is None and message.caption is None:
+        await message.answer(text, **kwargs)
+        return
+    try:
+        await message.edit_text(text, **kwargs)
+    except TelegramBadRequest:
+        await message.answer(text, **kwargs)
 
 
 async def ensure_user(session, message: Message, locale: str) -> User:
@@ -17,11 +98,12 @@ async def ensure_user(session, message: Message, locale: str) -> User:
     )
 
 
-def format_card(card: Card) -> str:
+def format_card(card: Card, include_translation: bool = True) -> str:
+    """Render a card.  The translation is hidden while the answer is pending."""
     parts = [f"<b>{card.hanzi}</b>"]
     if card.pinyin:
         parts.append(f"<i>{card.pinyin}</i>")
-    if card.translation:
+    if include_translation and card.translation:
         parts.append(card.translation)
     if card.example_sentence:
         parts.append(f"Example: {card.example_sentence}")
@@ -31,13 +113,3 @@ def format_card(card: Card) -> str:
         parts.append("Tags: " + ", ".join(card.tags))
     parts.append(f"Due: {compact_dt(card.due_at)}")
     return "\n".join(parts)
-
-
-def answer_accepted(text: str, card: Card) -> bool:
-    normalized = text.strip().lower()
-    answers = [card.hanzi.lower()]
-    if card.translation:
-        answers.append(card.translation.lower())
-    if card.pinyin:
-        answers.append(card.pinyin.lower())
-    return any(normalized == item or normalized in item or item in normalized for item in answers if item)

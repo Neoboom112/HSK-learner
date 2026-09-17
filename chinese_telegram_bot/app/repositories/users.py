@@ -55,3 +55,16 @@ class UserRepository:
         if user:
             user.last_activity_at = datetime.now(timezone.utc)
             await self.session.flush()
+
+    async def reset_counters(self, telegram_id: int) -> None:
+        """Clear the aggregates that belong to the learning progress."""
+        user = await self.get_by_telegram_id(telegram_id)
+        if user is None:
+            return
+        user.streak = 0
+        user.total_reviews = 0
+        user.total_correct = 0
+        user.total_wrong = 0
+        user.total_study_seconds = 0
+        user.last_review_date = None
+        await self.session.flush()

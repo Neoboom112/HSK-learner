@@ -24,7 +24,7 @@ class AnalyticsService:
         total_cards = await self.cards.count_for_user(user_id)
         learned_cards = await self.cards.count_learned(user_id)
         due_cards = len(await self.cards.get_due_cards(user_id, limit=1000))
-        user_row = await self.session.execute(select(User).where(User.telegram_id == user_id))
+        user_row = await self.session.execute(select(User).where(User.id == user_id))
         user = user_row.scalar_one_or_none()
 
         accuracy = await self.reviews.accuracy(user_id)

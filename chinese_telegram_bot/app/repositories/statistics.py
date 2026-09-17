@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 
-from sqlalchemy import func, select
+from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.models import Card, Review, Statistic
@@ -55,3 +55,9 @@ class StatisticsRepository:
             .order_by(func.date(Review.reviewed_at))
         )
         return [{"date": str(day), "reviews": int(count)} for day, count in rows.all()]
+
+    async def delete_for_user(self, user_id: int) -> int:
+        """Remove the daily rollups of a user."""
+        result = await self.session.execute(delete(Statistic).where(Statistic.user_id == user_id))
+        await self.session.flush()
+        return int(result.rowcount or 0)
