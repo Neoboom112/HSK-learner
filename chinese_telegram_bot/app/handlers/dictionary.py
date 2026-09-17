@@ -13,7 +13,6 @@ from app.keyboards.common import main_menu_keyboard
 from app.keyboards.dictionaries import (
     delete_confirm_keyboard,
     delete_dictionary_keyboard,
-    dictionary_list_keyboard,
     import_retry_keyboard,
 )
 from app.repositories.dictionaries import DictionaryRepository

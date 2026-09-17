@@ -15,14 +15,12 @@ logger = logging.getLogger(__name__)
 
 
 class DbSessionMiddleware(BaseMiddleware):
-    """One session per update, with a replay for transient write failures.
+    """One session per update, replaying it when the write fails transiently.
 
-    SQLite on Windows can refuse a write with "attempt to write a readonly
-    database" when antivirus or a file watcher holds the journal file for a
-    moment.  Nothing was committed in that case, so replaying the whole update is
-    safe, and the user never notices a hiccup that lasts a few hundred ms.  The
-    replies of the failed attempt are dropped by the outbox, so the replay stays
-    invisible.
+    SQLite on Windows occasionally refuses a write ("attempt to write a readonly
+    database") while antivirus or a file watcher holds the journal file.  Nothing
+    is committed in that case, so the update can simply run again; the outbox
+    drops the replies of the failed attempt to keep that invisible.
     """
 
     def __init__(self, attempts: int = 3, delay: float = 0.4) -> None:

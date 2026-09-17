@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+import contextlib
 from datetime import datetime, timezone
-from random import choice, shuffle
+from random import shuffle
 
 from aiogram import F, Router
 from aiogram.exceptions import TelegramBadRequest
@@ -12,6 +13,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from app.callbacks import LearningCallback
 from app.database.models import Card
+from app.handlers.common import answer_accepted, format_card
 from app.keyboards.common import main_menu_keyboard
 from app.keyboards.learning import after_answer_keyboard, rating_keyboard
 from app.models.enums import LearningMode
@@ -21,7 +23,6 @@ from app.repositories.users import UserRepository
 from app.services.learning_service import LearningService
 from app.states import LearningState
 from app.utils.text import compact_dt
-from app.handlers.common import answer_accepted, format_card
 
 router = Router(name=__name__)
 
@@ -191,17 +192,14 @@ async def skip_card(callback: CallbackQuery, callback_data: LearningCallback, se
         await callback.answer(t("need_start"), show_alert=True)
         return
 
-    # Skipped cards leave the session queue and their message is removed, so the
-    # chat does not fill up with "skipped" notes.
+    # Skipped cards leave the session queue and their message is removed.
     skipped = [int(card_id) for card_id in data.get("skipped_ids", [])]
     if callback_data.card_id and callback_data.card_id not in skipped:
         skipped.append(callback_data.card_id)
     await state.update_data(skipped_ids=skipped)
 
-    try:
+    with contextlib.suppress(TelegramBadRequest):
         await callback.message.delete()
-    except TelegramBadRequest:
-        pass
 
     card = await LearningService(session).next_card(
         user.id, mode, exclude=skipped, dictionary_id=user.active_dictionary_id

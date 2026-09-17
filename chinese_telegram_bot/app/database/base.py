@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
-from sqlalchemy import JSON, DateTime, MetaData
+from sqlalchemy import DateTime, MetaData
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.types import TypeDecorator
 
@@ -25,13 +25,10 @@ def utcnow() -> datetime:
 
 
 class UTCDateTime(TypeDecorator):
-    """``DateTime(timezone=True)`` that survives a round trip through SQLite.
+    """DateTime that stays timezone aware across SQLite round trips.
 
-    The schema declares every timestamp as timezone aware, but SQLite has no
-    timezone support and hands values back naive.  The services do aware
-    arithmetic (see ``SRSService.review``), so this type normalises both
-    directions: aware values are stored as UTC, stored values come back as UTC
-    aware datetimes.
+    SQLite has no timezone support and hands values back naive, while the SRS
+    code does aware arithmetic, so values are stored as UTC and returned as UTC.
     """
 
     impl = DateTime
@@ -77,13 +74,10 @@ class TimestampMixin:
 
 
 def metadata_alias(column_name: str) -> property:
-    """Expose a JSON column under the Python name ``metadata``.
+    """Expose a JSON column under the name ``metadata``.
 
-    ``metadata`` is reserved by the Declarative API because :class:`Base` already
-    owns ``Base.metadata`` (the :class:`~sqlalchemy.MetaData` registry).  The
-    column is therefore mapped under a private attribute name and re-exposed
-    through a property once the mapping is complete, which keeps the public API
-    (``card = Card(metadata={...})`` and ``card.metadata``) working as expected.
+    The ORM reserves ``metadata`` (it owns ``Base.metadata``), so the column is
+    mapped under another attribute and re-exposed as a property.
     """
 
     def getter(self: Any) -> dict[str, Any]:

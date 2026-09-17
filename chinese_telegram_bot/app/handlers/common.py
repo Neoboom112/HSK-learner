@@ -48,12 +48,7 @@ def _answer_variants(card: Card) -> set[str]:
 
 
 def answer_accepted(text: str, card: Card) -> bool:
-    """Check a typed answer against everything the card knows about itself.
-
-    Translations often hold several variants ("все, весь, всё"), pinyin may be
-    typed without tone marks and some decks store translations in another
-    language, so the comparison is deliberately forgiving.
-    """
+    """Compare a typed answer with the card, forgiving variants and tone marks."""
     answer = _normalize_answer(text or "")
     if not answer:
         return False
@@ -73,12 +68,7 @@ def answer_accepted(text: str, card: Card) -> bool:
 
 
 async def edit_or_send(message: Message, text: str, **kwargs) -> None:
-    """Edit the message in place, or send a new one when it cannot be edited.
-
-    Buttons of the bot sit on text messages, but a photo (the progress chart)
-    cannot be turned into text, and Telegram also rejects edits that change
-    nothing - in both cases a fresh message is the right answer.
-    """
+    """Edit the message, or send a new one when it has no text to edit."""
     if message.text is None and message.caption is None:
         await message.answer(text, **kwargs)
         return

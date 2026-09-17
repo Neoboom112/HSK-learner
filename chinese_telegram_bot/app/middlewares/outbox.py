@@ -1,9 +1,7 @@
 """Queue user visible replies until the database transaction is committed.
 
-When a transient database failure makes :class:`DbSessionMiddleware` replay an
-update, the handler runs a second time.  Without this buffer the user would get
-every message twice (three times with three attempts); now the replies of a
-failed attempt are dropped and only the successful attempt is delivered.
+A replayed update would otherwise send every message again; holding the replies
+back makes the retry invisible.
 """
 
 from __future__ import annotations

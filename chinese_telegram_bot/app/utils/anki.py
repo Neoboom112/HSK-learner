@@ -333,10 +333,9 @@ def parse_apkg(apkg_path: Path) -> tuple[str, list[CardDraft]]:
     used, whatever the subformat of the package is.
     """
     try:
-        with zipfile.ZipFile(apkg_path, "r") as archive:
-            with tempfile.TemporaryDirectory(prefix="apkg_") as workdir:
-                db_path = _extract_collection(archive, Path(workdir))
-                return _read_collection(db_path)
+        with zipfile.ZipFile(apkg_path, "r") as archive, tempfile.TemporaryDirectory(prefix="apkg_") as workdir:
+            db_path = _extract_collection(archive, Path(workdir))
+            return _read_collection(db_path)
     except zipfile.BadZipFile as exc:
         raise ValueError("This file is not an Anki package: it is not a valid .apkg archive.") from exc
     except sqlite3.Error as exc:

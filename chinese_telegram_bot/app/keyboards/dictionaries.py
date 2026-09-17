@@ -7,12 +7,9 @@ from app.keyboards.common import back_button
 
 
 def dictionary_list_keyboard(dictionaries, t, active_id: int | None = None):
-    """The dictionary screen: the list itself plus the import/delete entries.
+    """Dictionary screen: the deck list plus the import and delete entries.
 
-    ``active_id`` marks the deck used for reviews; ``None`` means "all decks",
-    which is offered as the first entry.  The other import kinds (csv/json/hsk/
-    upload) still exist in the handlers and accept files sent here, they are
-    simply not advertised as separate buttons any more.
+    ``active_id`` marks the deck used for reviews, ``None`` means all of them.
     """
     builder = InlineKeyboardBuilder()
 

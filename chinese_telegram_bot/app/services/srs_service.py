@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 
 from app.database.models import Card
-from app.models.schemas import ReviewResult
 
 
 @dataclass(slots=True)

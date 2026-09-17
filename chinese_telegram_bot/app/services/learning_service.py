@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
-from datetime import datetime, timezone
 from random import choice
 
 from sqlalchemy.ext.asyncio import AsyncSession

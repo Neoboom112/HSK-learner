@@ -17,7 +17,6 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
-
 from app.bot_profile import apply_bot_profile
 from app.config import Settings, get_settings
 from app.database.session import async_session, dispose_engine, init_models

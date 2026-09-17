@@ -1,14 +1,9 @@
-"""JSON backed localisation layer.
-
-Locale files live in ``locales/<code>.json`` and hold a flat ``key -> template``
-mapping.  :meth:`Localizer.t` renders a template with ``str.format`` so handlers
-can call ``t("dict_import_done", name=..., imported=...)``.
-"""
+"""JSON backed localisation: ``locales/<code>.json`` plus the ``t()`` helper."""
 
 from __future__ import annotations
 
 import json
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 
 from app.config import get_settings
@@ -60,7 +55,7 @@ def _read_messages(path: Path) -> dict[str, str]:
     return {str(key): str(value) for key, value in payload.items()}
 
 
-@lru_cache(maxsize=None)
+@cache
 def _catalogues(locale: str) -> tuple[dict[str, str], dict[str, str]]:
     settings = get_settings()
     directory = Path(settings.locales_dir)

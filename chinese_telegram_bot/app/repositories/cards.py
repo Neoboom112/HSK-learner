@@ -100,13 +100,7 @@ class CardRepository:
         return list(result.scalars().all())
 
     async def get_weak_cards(self, user_id: int, limit: int = 20) -> list[Card]:
-        """Cards the user actually struggles with.
-
-        A card is weak once it was forgotten at least once (``lapses > 0``) or its
-        ease dropped below the initial 2.5 from shaky answers.  Cards that were
-        only ever answered correctly are *not* weak, and a forgotten card must not
-        be filtered out just because the failure reset its repetition counter.
-        """
+        """Cards with at least one lapse, or a shaken ease factor."""
         result = await self.session.execute(
             select(Card)
             .where(
@@ -142,12 +136,7 @@ class CardRepository:
         return forecast
 
     async def get_by_hanzi(self, user_id: int, hanzi: str) -> list[Card]:
-        """All cards of the user with the same characters.
-
-        The same word can live in several decks of one user, and another deck may
-        carry the translation in another language - useful when checking a typed
-        answer.
-        """
+        """Every card of the user with the same characters, in any of his decks."""
         result = await self.session.execute(
             select(Card).where(Card.user_id == user_id, Card.hanzi == hanzi)
         )

@@ -1,16 +1,13 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
-
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database.models import Card, Review, User
+from app.database.models import User
 from app.models.schemas import AnalyticsSummary
 from app.repositories.cards import CardRepository
 from app.repositories.reviews import ReviewRepository
 from app.repositories.statistics import StatisticsRepository
-from app.utils.text import pct
 
 
 class AnalyticsService:

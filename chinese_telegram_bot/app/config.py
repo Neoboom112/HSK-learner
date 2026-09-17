@@ -1,9 +1,4 @@
-"""Runtime configuration.
-
-Values are read from environment variables, falling back to the ``.env`` file
-next to ``main.py``.  Every path is anchored to the project directory so the bot
-can be started from anywhere.
-"""
+"""Runtime configuration: environment variables with a ``.env`` fallback."""
 
 from __future__ import annotations
 
@@ -31,7 +26,6 @@ class Settings(BaseSettings):
 
     # Localisation
     default_locale: str = "en"
-    supported_locales: tuple[str, ...] = ("en", "ru", "zh")
 
     # Filesystem
     data_dir: Path = BASE_DIR / "data"
@@ -40,17 +34,15 @@ class Settings(BaseSettings):
 
     # Database
     database_url: str = ""
-    # Optional explicit database file.  Handy when the project folder sits on a
-    # drive that antivirus or a sync client keeps locking.  Empty means
-    # ``<DATA_DIR>/bot.db``; relative paths are resolved against the project.
+    # Optional explicit database file (empty = <DATA_DIR>/bot.db); relative paths
+    # are resolved against the project directory.
     db_file: str = ""
     sql_echo: bool = False
 
     # Behaviour
-    # Telegram only lets a bot download files up to 20 MB, so that is the cap.
+    # Telegram only lets a bot download files up to 20 MB.
     max_upload_mb: int = 20
-    # Automatic "time to review" messages.  Off by default: the user asks for the
-    # progress screen themselves.
+    # Automatic "time to review" messages; off by default.
     review_reminders: bool = False
     daily_review_limit: int = 20
     review_check_seconds: int = 300

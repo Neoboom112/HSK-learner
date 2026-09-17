@@ -6,7 +6,6 @@ from typing import Any
 from aiogram.dispatcher.middlewares.base import BaseMiddleware
 
 from app.config import get_settings
-from app.database.models import User
 from app.i18n import get_localizer
 from app.repositories.users import UserRepository
 

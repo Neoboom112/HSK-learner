@@ -29,7 +29,6 @@
   "reminder_title": "该复习了",
   "reminder_due_cards": "待复习卡片：{count}",
   "reminder_last_due": "最近到期：{when}",
-  "dict_send_file": "请发送受支持的文件。",
   "dict_unsupported_format": "不支持的文件格式。",
   "dict_file_too_large": "文件太大。限制：{mb} MB。",
   "dict_import_done": "已导入：{name}\n新增：{imported}\n重复：{duplicates}",
@@ -62,17 +61,10 @@
   "learn_known": "✅ 认识",
   "learn_unknown": "❌ 不认识",
   "learn_skip": "⏭ 跳过",
-  "learn_skipped": "已跳过",
   "learn_card_not_found": "未找到卡片，请重新开始学习。",
   "learn_skipped_all": "本次会话的卡片都已跳过。",
   "learn_quiz_unavailable": "测验需要词典中至少有两个不同的翻译。",
   "learn_answer": "正确答案：",
-  "grade_0": "0",
-  "grade_1": "1",
-  "grade_2": "2",
-  "grade_3": "3",
-  "grade_4": "4",
-  "grade_5": "5",
   "progress_title": "进度面板",
   "progress_total_cards": "总卡片数",
   "progress_learned": "已学习",
@@ -108,6 +100,5 @@
   "error_generic": "发生错误。",
   "error_database": "数据库暂时无法写入，请稍后重试。",
   "admin_title": "管理员面板",
-  "admin_backup_ready": "备份已完成",
-  "daily_goal": "每日目标"
+  "admin_backup_ready": "备份已完成"
 }

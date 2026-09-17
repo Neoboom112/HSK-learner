@@ -29,18 +29,6 @@ def main_menu_keyboard(t):
 
 
 def back_button(builder: InlineKeyboardBuilder, t) -> InlineKeyboardBuilder:
-    """Append the shared "back to menu" button to an inline keyboard."""
+    """Add the shared "back to menu" button to an inline keyboard."""
     builder.button(text=t("back"), callback_data=MenuCallback(action="menu").pack())
     return builder
-
-
-def back_keyboard(t):
-    """A keyboard that only offers the way back to the main menu."""
-    return back_button(InlineKeyboardBuilder(), t).as_markup()
-
-
-def cancel_inline_keyboard(t):
-    builder = InlineKeyboardBuilder()
-    builder.button(text=t("cancel"), callback_data=MenuCallback(action="cancel").pack())
-    builder.adjust(1)
-    return builder.as_markup()

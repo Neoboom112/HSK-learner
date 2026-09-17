@@ -2,8 +2,6 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from app.models.schemas import CardDraft
-
 
 def normalize_text(value: str | None) -> str:
     return (value or "").strip()

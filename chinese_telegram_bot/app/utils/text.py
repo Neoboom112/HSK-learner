@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from math import ceil
 
 
 def progress_bar(value: float, total: float, width: int = 12) -> str:

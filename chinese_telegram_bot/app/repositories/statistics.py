@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy import delete, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database.models import Card, Review, Statistic
+from app.database.models import Review, Statistic
 
 
 class StatisticsRepository:
